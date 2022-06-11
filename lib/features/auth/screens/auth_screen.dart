@@ -1,6 +1,8 @@
+import 'package:amazon_tut/common/widgets/button.dart';
+import 'package:amazon_tut/common/widgets/text_field.dart';
 import 'package:amazon_tut/constants/constants.dart';
 import 'package:amazon_tut/dimensions.dart';
-import 'package:amazon_tut/features/auth/widgets/BigText.dart';
+import 'package:amazon_tut/common/widgets/BigText.dart';
 import 'package:amazon_tut/smallText.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,19 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   AuthEnum? _authEnum = AuthEnum.signUp;
+  final _formSignup = GlobalKey<FormState>();
+  final _formSignIn = GlobalKey<FormState>();
+  TextEditingController nameCtr = TextEditingController();
+  TextEditingController emailCtr = TextEditingController();
+  TextEditingController passCtr = TextEditingController();
+
+  @override
+  void dispose(){
+    super.dispose();
+    nameCtr.dispose();
+    emailCtr.dispose();
+    passCtr.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +62,36 @@ class _AuthScreenState extends State<AuthScreen> {
                   },
                 )
               ),
+              if(_authEnum == AuthEnum.signUp)
+                Container(
+                  padding: EdgeInsets.all(Dimensions.height18),
+                  // margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: GlobalVariables.backgroundColor,
+                    borderRadius: BorderRadius.circular(Dimensions.radius10)
+                  ),
+                  child: Form(
+                      key: _formSignup,
+                      child:  Column(
+                        children: [
+                           CustomTextField(text: 'Name', controller: nameCtr,),
+                          SizedBox(height: Dimensions.height12,),
+                          CustomTextField(text: 'Email', controller: emailCtr,),
+                          SizedBox(height: Dimensions.height12,),
+                          CustomTextField(text: 'Password', controller: passCtr,),
+                          SizedBox(height: Dimensions.height12,),
+                          CustomButton(text: 'Sign-Up', onTap: (){
+                            if(_formSignup.currentState!.validate()){
+                              return null;
+                            }
+
+                          },)
+                        ],
+                      )
+                  ),
+                ),
               ListTile(
-                title: SmallText(text: 'Login'),
+                title: SmallText(text: 'Sign-In'),
                 leading: Radio(
                   value: AuthEnum.signIn,
                   groupValue: _authEnum,
